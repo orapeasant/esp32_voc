@@ -1,5 +1,5 @@
 #!/bin/bash
-PROJECT=ei-mbed-qcbor-http-acc.ino
+PROJECT=esp32_voc.ino
 BOARD=esp32:esp32:esp32da
 COMMAND=$1
 
