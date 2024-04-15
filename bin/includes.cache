@@ -1,0 +1,262 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/variants/esp32da"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "BlynkSimpleEsp32_SSL.h",
+    "Includepath": "/home/ubuntu/Arduino/libraries/blynk-library/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "WiFiClientSecure.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFiClientSecure/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "WiFi.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "Preferences.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Preferences/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "WebServer.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WebServer/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "DNSServer.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/DNSServer/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "Update.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Update/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "HTTPClient.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/HTTPClient/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Wire/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "Multichannel_Gas_GMXXX.h",
+    "Includepath": "/home/ubuntu/Arduino/libraries/Seeed_Arduino_MultiGas/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/ei-mbed-qcbor-http-acc.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/Multichallen_Gas_GM/Multichannel_Gas_GM.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/edgeimpulse/ei_sensors_utils.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/edgeimpulse/el_sensor_multi_gas.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/lg/lg.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/qcbor/UsefulBuf.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/qcbor/ieee754.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/qcbor/qcbor_decode.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/qcbor/qcbor_encode.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/Arduino/libraries/blynk-library/src/utility/BlynkDebug.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/Arduino/libraries/blynk-library/src/utility/BlynkHandlers.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/Arduino/libraries/blynk-library/src/utility/BlynkHelpers.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/Arduino/libraries/blynk-library/src/utility/BlynkTimeUtils.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/Arduino/libraries/blynk-library/src/utility/BlynkTimer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/Arduino/libraries/blynk-library/src/utility/utility.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFiClientSecure/src/WiFiClientSecure.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFiClientSecure/src/esp_crt_bundle.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFiClientSecure/src/ssl_client.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFi.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiAP.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiGeneric.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiMulti.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiSTA.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiScan.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiUdp.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Preferences/src/Preferences.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WebServer/src/Parsing.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WebServer/src/WebServer.cpp",
+    "Include": "FS.h",
+    "Includepath": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/FS/src"
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WebServer/src/WebServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WebServer/src/detail/mimetable.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/DNSServer/src/DNSServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Update/src/HttpsOTAUpdate.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Update/src/Updater.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/HTTPClient/src/HTTPClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Wire/src/Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/Arduino/libraries/Seeed_Arduino_MultiGas/src/Multichannel_Gas_GMXXX.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/FS/src/FS.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/FS/src/vfs_api.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

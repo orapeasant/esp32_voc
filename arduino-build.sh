@@ -1,32 +1,13 @@
 #!/bin/bash
-PROJECT=esp32_voc.ino
+PROJECT=ei-mbed-qcbor-http-acc.ino
 BOARD=esp32:esp32:esp32da
 COMMAND=$1
 
-INCLUDE+=" -I ./src"
+INCLUDE+=" -I ./src/lg"
 INCLUDE+=" -I ./src/blynk"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c"
-#below needs to be moved here, otherwise, compilation error.
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/QCBOR/src"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/QCBOR/inc"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/QCBOR/test"
-#above needs to be moved here, otherwise, compilation error.
-INCLUDE+=" -I ./src/SFUD/sfud/inc"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/inc"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/inc/signing"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/inc/mbedtls"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/mbedtls/library"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/mbedtls/include"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/mbedtls/3rdparty/everest/include"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/mbedtls/3rdparty/everest/include/everest"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/mbedtls/3rdparty/everest/include/everest/kremlib"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-c/mbedtls/tests/include"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-platform/esp32_voc/"
-INCLUDE+=" -I ./src/edge-impulse/ingestion-sdk-platform/sensors/"
-INCLUDE+=" -I ./src/firmware-sdk"
-INCLUDE+=" -I ./src/firmware-sdk/sensor-aq"
-
-
+INCLUDE+=" -I ./src/qcbor"
+INCLUDE+=" -I ./src/edgeimpulse"
+INCLUDE+=" -I ./src/Multichallen_Gas_GM"
 
 FLAGS+=" -O3"
 FLAGS+=" -g3"
@@ -34,14 +15,17 @@ FLAGS+=" -DEI_SENSOR_AQ_STREAM=int"
 FLAGS+=" -DEIDSP_QUANTIZE_FILTERBANK=0"
 FLAGS+=" -D__STATIC_FORCEINLINE=__STATIC_INLINE"
 
+BUILDPATH="./bin"
+
 rm -Rf /tmp/arduino/sketches/*
 
-if [ "$COMMAND" = "--build" ];
-then
+PORT=$(arduino-cli board list | grep USB | cut -d ' ' -f1)
+
+build() {
 	echo "Building $PROJECT"
 	#echo "INCLUDE $INCLUDE"
 	#echo "FLAGS $FLAGS"
-	arduino-cli compile --fqbn  $BOARD --build-property compiler.cpp.extra_flags="$INCLUDE $FLAGS" $PROJECT &
+	arduino-cli compile --fqbn  $BOARD --build-property compiler.cpp.extra_flags="$INCLUDE" --build-property build.extra_flags="$FLAGS" --build-path="$BUILDPATH" $PROJECT &
 	pid=$! # Process Id of the previous running command
 	sec=0
 	while kill -0 $pid 2>/dev/null
@@ -56,15 +40,28 @@ then
 		echo "Building $PROJECT done"
 	else
 		exit "Building $PROJECT failed"
-	fi
+	fi	
+}
+
+flash() {
+	arduino-cli upload -p $PORT --fqbn $BOARD -i $BUILDPATH/$PROJECT.bin
+}
+
+echo "Port: $PORT"
+if [ "$COMMAND" = "--build" ];
+then
+	build
 elif [ "$COMMAND" = "--flash" ];
 then
-	arduino-cli upload -p $(arduino-cli board list | grep Arduino | cut -d ' ' -f1) --fqbn $BOARD -i *.bin
+	flash
 elif [ "$COMMAND" = "--all" ];
 then
-	arduino-cli compile --fqbn  $BOARD $PROJECT
+	build
 	status=$?
-	[ $status -eq 0 ] && arduino-cli upload -p $(arduino-cli board list | grep Arduino | cut -d ' ' -f1) --fqbn $BOARD -i *.bin
+	[ $status -eq 0 ] && flash
+elif [ "$COMMAND" = "--monitor" ];
+then
+	arduino-cli monitor -p /dev/ttyUSB0 --config baudrate=115200
 else
 	echo "Nothing to do for target"
 fi
