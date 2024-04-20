@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/blynk/Indicator.h"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/blynk/Indicator.h"
 
 #if defined(BOARD_LED_PIN_WS2812)
   #include <Adafruit_NeoPixel.h>    // Library: https://github.com/adafruit/Adafruit_NeoPixel

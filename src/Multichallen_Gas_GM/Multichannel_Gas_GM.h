@@ -60,27 +60,27 @@ class GAS_GM {
     void preheated();
     void unPreheated();
     void changeGMAddr(uint8_t address = 0x08);
-    uint32_t measure_NO2(){
+    uint16_t measure_NO2(){  //origin: uint32_t
         return getGM102B();
     };
-    uint32_t getGM102B();
-    uint32_t measure_C2H5OH(){
+    uint16_t getGM102B();
+    uint16_t measure_C2H5OH(){
         return getGM302B();
     };
-    uint32_t getGM302B();
+    uint16_t getGM302B();
     #ifdef GM_402B
-    uint32_t getGM402B();
+    uint16_t getGM402B();
     #endif
-    uint32_t measure_VOC(){
+    uint16_t measure_VOC(){
         return getGM502B();
     };
-    uint32_t getGM502B();
-    uint32_t measure_CO(){
+    uint16_t getGM502B();
+    uint16_t measure_CO(){
         return getGM702B();
     };
-    uint32_t getGM702B();
+    uint16_t getGM702B();
     #ifdef GM_802B
-    uint32_t getGM802B();
+    uint16_t getGM802B();
     #endif
     inline float calcVol(uint32_t adc, float verf = GM_VERF, int resolution = GM_RESOLUTION) {
         return (adc * verf) / (resolution * 1.0);
@@ -90,6 +90,6 @@ class GAS_GM {
     bool isPreheated;
     uint8_t GM_ADDRESS;
     void GMWriteByte(uint8_t cmd);
-    uint32_t GMRead32();
+    uint16_t GMRead32();
 };
 #endif

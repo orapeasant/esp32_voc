@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/blynk/BlynkEdgent.h"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/blynk/BlynkEdgent.h"
 
 extern "C" {
   void app_loop();

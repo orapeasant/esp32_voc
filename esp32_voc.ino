@@ -27,8 +27,8 @@
 #define SSID_NET      "Audrialand"
 #define PASSWORD      "Adirondax@1234"
 
-#define SAMPLE_TIME   1 // seconds
-#define SAMPLE_RATE   1 // Hz
+#define SAMPLE_TIME   10 // seconds
+#define SAMPLE_RATE   50 // Hz
 
 #define USE_ESP32_VOC  true
 
@@ -61,6 +61,7 @@
 #include "lg.h"
 
 #include "BlynkEdgent.h"
+#include "ei_fusion.h"
 
 #include <WiFi.h>
 #include <HTTPClient.h>
@@ -75,6 +76,7 @@
 GAS_GMXXX<TwoWire> gas;
 
 boolean gbCaptureData = false;
+char* gsMACAddress ="";
 
 // V0 is a datastream used to transfer and store LED switch state.
 // Evey time you use the LED switch in the app, this function
@@ -107,9 +109,9 @@ void ei_gas_init(void)
     Serial.println("after begin");
 }
 
-void getData(uint32_t *g0,uint32_t *g1,uint32_t *g2,uint32_t *g3)
+void getData(uint32_t *g0, uint32_t *g1,uint32_t *g2,uint32_t *g3)
 {
-
+    //gas.getXXX returns uint32_t
     *g0 = gas.getGM102B(); // NO2
     *g1 = gas.getGM302B(); // C2H5CH
     *g2 = gas.getGM502B(); // VOC
@@ -160,14 +162,14 @@ void post_data(){
     // Payload header
     sensor_aq_payload_info payload = {
         // Unique device ID (optional), set this to e.g. MAC address or device EUI **if** your device has one
-        "ac:87:a3:0a:2d:1b",
+        gsMACAddress,
         // Device type (required), use the same device type for similar devices
         "ESP32-VOC-001",
         // How often new data is sampled in ms. (100Hz = every 10 ms.)
         1/SAMPLE_TIME,
         // The axes which you'll use. The units field needs to comply to SenML units (see https://www.iana.org/assignments/senml/senml.xhtml)
-        //{ { "GM102", "ppm" }, { "GM302", "ppm" }, { "GM502", "ppm" }, { "GM702", "ppm" } }
-        { { "GM102", "ppm" }, { "GM302", "ppm" }, { "GM502", "ppm" } }
+        { { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" }, { "CO", "ppm" } }
+        //{ { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" } }
     };
 
     // Place to write our data.
@@ -185,11 +187,9 @@ void post_data(){
 
     lg( "1.");
     // Periodically call `sensor_aq_add_data` (every 10 ms. in this example) to append data
-    int16_t values[SAMPLE_TIME * SAMPLE_RATE][3] = { (int16_t)0 }; // 100Hz * 10 seconds
+    int16_t values[SAMPLE_TIME * SAMPLE_RATE][4] = { (int16_t)0 }; // 100Hz * 10 seconds
     uint16_t values_ix = 0;
-    lg( "2.");
-    while(values_ix < 1000){
-        lg( "3.");
+    while(values_ix < SAMPLE_TIME * SAMPLE_RATE){
         uint64_t next_tick = micros() + SAMPLE_RATE * 1000;
         
         uint16_t g0, g1, g2, g3;
@@ -198,7 +198,7 @@ void post_data(){
         values[values_ix][0] = (int16_t)g0;
         values[values_ix][1] = (int16_t)g1;
         values[values_ix][2] = (int16_t)g2;
-        //values[values_ix][3] = (int16_t)g3;
+        values[values_ix][3] = (int16_t)g3;
 
         values_ix++;
 
@@ -209,7 +209,7 @@ void post_data(){
 
     lg("4.");
     for (size_t ix = 0; ix < sizeof(values) / sizeof(values[0]); ix++) {
-        res = sensor_aq_add_data_i16(&ctx, values[ix], 3);
+        res = sensor_aq_add_data_i16(&ctx, values[ix], 4);
         if (res != AQ_OK) {
             Serial.printf("sensor_aq_add_data failed (%d)\n", res);
             while(1);
@@ -297,12 +297,18 @@ void setup() {
     }
     Serial.println("");
     Serial.println("WiFi connected");
+    byte mac[6];
+    WiFi.macAddress(mac);
+    sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
+
+
 
     delay(100);
     BlynkEdgent.begin();
 
     //ei_gas_init();
     gas.begin(Wire, 0x08);
+    fusion_setup();
 
 }
 
@@ -313,6 +319,8 @@ void loop(){
         Serial.println("in capturing...");
         post_data();
         //get_gas();
+    } else {
+       fusion_loop();
     }
 
 }

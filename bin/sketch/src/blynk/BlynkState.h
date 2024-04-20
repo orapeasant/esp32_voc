@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/blynk/BlynkState.h"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/blynk/BlynkState.h"
 
 enum State {
   MODE_WAIT_CONFIG,

@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/blynk/Console.h"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/blynk/Console.h"
 
 #include <Blynk/BlynkConsole.h>
 

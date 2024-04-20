@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/qcbor/qcbor.h"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/qcbor/qcbor.h"
 /*==============================================================================
  Copyright (c) 2016-2018, The Linux Foundation.
  Copyright (c) 2018-2019, Laurence Lundblade.

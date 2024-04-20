@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/edgeimpulse/el_sensor_multi_gas.h"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/edgeimpulse/el_sensor_multi_gas.h"
 #ifndef _EI_MUTLGASSENSOR_H
 #define _EI_MUTLGASSENSOR_H
 
@@ -9,6 +9,6 @@ typedef float sample_format_t;
 #define SIZEOF_N_GAS_SAMPLED	(sizeof(sample_format_t) * N_GAS_SAMPLED)
 
 void ei_multigas_init(void);
-void getData(float *g0,float *g1,float *g2,float *g3);
+void getGasData(uint16_t *g0,uint16_t *g1,uint16_t *g2,uint16_t *g3);
 
 #endif

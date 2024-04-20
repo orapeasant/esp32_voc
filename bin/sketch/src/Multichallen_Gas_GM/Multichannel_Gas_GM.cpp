@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/Multichallen_Gas_GM/Multichannel_Gas_GM.cpp"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/Multichallen_Gas_GM/Multichannel_Gas_GM.cpp"
 /*
     Multichannel_GAS_GM.cpp
     Description: A drive for Seeed Grove Multichannel gas sensor V2.0.
@@ -85,7 +85,7 @@ void GAS_GM<T>::GMWriteByte(uint8_t cmd) {
     @return: uint32_t
 */
 template<class T>
-uint32_t GAS_GM<T>::GMRead32() {
+uint16_t GAS_GM<T>::GMRead32() {
     uint8_t index = 0;
     uint32_t value = 0;
     _Wire->requestFrom((int)GM_ADDRESS, (int)4);
@@ -95,7 +95,7 @@ uint32_t GAS_GM<T>::GMRead32() {
         index++;
     }
     delay(1);
-    return value;
+    return (uint16_t)value;  //origin is uint32_t
 }
 
 /**
@@ -126,7 +126,7 @@ void GAS_GM<T>::unPreheated() {
     @return: uint32_t
 */
 template<class T>
-uint32_t GAS_GM<T>::getGM102B() {
+uint16_t GAS_GM<T>::getGM102B() { //uint32_t
     if (!isPreheated) {
         preheated();
     }
@@ -140,7 +140,7 @@ uint32_t GAS_GM<T>::getGM102B() {
     @return: uint32_t
 */
 template<class T>
-uint32_t GAS_GM<T>::getGM302B() {
+uint16_t GAS_GM<T>::getGM302B() {
     if (!isPreheated) {
         preheated();
     }
@@ -155,7 +155,7 @@ uint32_t GAS_GM<T>::getGM302B() {
     @return: uint32_t
 */
 template<class T>
-uint32_t GAS_GM<T>::getGM402B() {
+uint16_t GAS_GM<T>::getGM402B() {
     if (!isPreheated) {
         preheated();
     }
@@ -170,7 +170,7 @@ uint32_t GAS_GM<T>::getGM402B() {
     @return: uint32_t
 */
 template<class T>
-uint32_t GAS_GM<T>::getGM502B() {
+uint16_t GAS_GM<T>::getGM502B() {
     if (!isPreheated) {
         preheated();
     }
@@ -184,7 +184,7 @@ uint32_t GAS_GM<T>::getGM502B() {
     @return: uint32_t
 */
 template<class T>
-uint32_t GAS_GM<T>::getGM702B() {
+uint16_t GAS_GM<T>::getGM702B() {
     if (!isPreheated) {
         preheated();
     }
@@ -199,7 +199,7 @@ uint32_t GAS_GM<T>::getGM702B() {
     @return: uint32_t
 */
 template<class T>
-uint32_t GAS_GM<T>::getGM802B() {
+uint16_t GAS_GM<T>::getGM802B() {
     if (!isPreheated) {
         preheated();
     }

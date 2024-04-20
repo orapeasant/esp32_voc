@@ -3,11 +3,19 @@ PROJECT=esp32_voc.ino
 BOARD=esp32:esp32:esp32da
 COMMAND=$1
 
-INCLUDE+=" -I ./src/lg"
-INCLUDE+=" -I ./src/blynk"
-INCLUDE+=" -I ./src/qcbor"
-INCLUDE+=" -I ./src/edgeimpulse"
-INCLUDE+=" -I ./src/Multichallen_Gas_GM"
+INCLUDE+=" -I ./src/lg/"
+INCLUDE+=" -I ./src/blynk/"
+INCLUDE+=" -I ./src/qcbor/"
+INCLUDE+=" -I ./src/edgeimpulse/"
+INCLUDE+=" -I ./src/Multichallen_Gas_GM/"
+INCLUDE+=" -I ./src/edgeimpulse/edge-impulse-sdk/"
+INCLUDE+=" -I ./src/edgeimpulse/edge-impulse-sdk/dsp/"
+INCLUDE+=" -I ./src/edgeimpulse/model-parameters/"
+INCLUDE+=" -I ./src/edgeimpulse/tflite-model/"
+
+LIBRARIES+=" --libraries  ./libs"
+BUILDPATH="./bin"
+CONFIG="--config-file ./arduino-cli.yaml"
 
 FLAGS+=" -O3"
 FLAGS+=" -g3"
@@ -15,9 +23,7 @@ FLAGS+=" -DEI_SENSOR_AQ_STREAM=int"
 FLAGS+=" -DEIDSP_QUANTIZE_FILTERBANK=0"
 FLAGS+=" -D__STATIC_FORCEINLINE=__STATIC_INLINE"
 
-BUILDPATH="./bin"
-
-rm -Rf /tmp/arduino/sketches/*
+#rm -Rf /tmp/arduino/sketches/*
 
 PORT=$(arduino-cli board list | grep USB | cut -d ' ' -f1)
 
@@ -25,7 +31,7 @@ build() {
 	echo "Building $PROJECT"
 	#echo "INCLUDE $INCLUDE"
 	#echo "FLAGS $FLAGS"
-	arduino-cli compile --fqbn  $BOARD --build-property compiler.cpp.extra_flags="$INCLUDE" --build-property build.extra_flags="$FLAGS" --build-path="$BUILDPATH" $PROJECT &
+	arduino-cli compile --fqbn  $BOARD  $CONFIG $LIBRARIES --build-property compiler.cpp.extra_flags="$INCLUDE" --build-property build.extra_flags="$FLAGS" --build-path="$BUILDPATH"  $PROJECT &
 	pid=$! # Process Id of the previous running command
 	sec=0
 	while kill -0 $pid 2>/dev/null

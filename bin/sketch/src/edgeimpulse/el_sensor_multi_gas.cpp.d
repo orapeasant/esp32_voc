@@ -1,6 +1,6 @@
-/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/edgeimpulse/el_sensor_multi_gas.cpp.o: \
- /home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/edgeimpulse/el_sensor_multi_gas.cpp \
- /home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/edgeimpulse/el_sensor_multi_gas.h \
+/home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/edgeimpulse/el_sensor_multi_gas.cpp.o: \
+ /home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/edgeimpulse/el_sensor_multi_gas.cpp \
+ /home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/edgeimpulse/el_sensor_multi_gas.h \
  src/Multichallen_Gas_GM/Multichannel_Gas_GM.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Wire/src/Wire.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/esp32-hal.h \
@@ -110,7 +110,7 @@
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/WString.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/pgmspace.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/Printable.h \
- /home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/edgeimpulse/ei_sensors_utils.h \
+ /home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/edgeimpulse/ei_sensors_utils.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/Arduino.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/esp_arduino_version.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/esp8266-compat.h \

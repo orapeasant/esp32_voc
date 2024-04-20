@@ -1,5 +1,5 @@
-/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/Multichallen_Gas_GM/Multichannel_Gas_GM.cpp.o: \
- /home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/Multichallen_Gas_GM/Multichannel_Gas_GM.cpp \
+/home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/Multichallen_Gas_GM/Multichannel_Gas_GM.cpp.o: \
+ /home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/Multichallen_Gas_GM/Multichannel_Gas_GM.cpp \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/Arduino.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/esp_arduino_version.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
@@ -134,4 +134,4 @@
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/Arduino.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Wire/src/Wire.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/esp32-hal.h \
- /home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/bin/sketch/src/Multichallen_Gas_GM/Multichannel_Gas_GM.h
+ /home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/Multichallen_Gas_GM/Multichannel_Gas_GM.h

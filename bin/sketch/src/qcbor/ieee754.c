@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/qcbor/ieee754.c"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/qcbor/ieee754.c"
 /*==============================================================================
  ieee754.c -- floating point conversion between half, double and single precision
 

@@ -17,7 +17,7 @@ void ei_multigas_init(void)
     Serial.println("after begin");
     }
 
-void _getData(float *g0,float *g1,float *g2,float *g3)
+void getGasData(uint16_t *g0,uint16_t *g1,uint16_t *g2,uint16_t *g3)
 {
 
     *g0 = gasGM.getGM102B(); // NO2

@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/lg/lg.cpp"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/lg/lg.cpp"
 #include <Arduino.h>
 #include "lg.h"
 

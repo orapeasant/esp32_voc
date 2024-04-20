@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/blynk/ConfigStore.h"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/blynk/ConfigStore.h"
 
 #define CONFIG_FLAG_VALID       0x01
 #define CONFIG_FLAG_STATIC_IP   0x02

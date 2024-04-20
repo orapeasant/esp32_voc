@@ -1,4 +1,4 @@
-#line 1 "/home/ubuntu/proj/ei-projects/esp32-examples/ei-mbed-qcbor-http-acc/src/edgeimpulse/el_sensor_multi_gas.cpp"
+#line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/src/edgeimpulse/el_sensor_multi_gas.cpp"
 /* Include ----------------------------------------------------------------- */
 #include <stdint.h>
 #include <stdlib.h>
@@ -18,7 +18,7 @@ void ei_multigas_init(void)
     Serial.println("after begin");
     }
 
-void _getData(float *g0,float *g1,float *g2,float *g3)
+void getGasData(uint16_t *g0,uint16_t *g1,uint16_t *g2,uint16_t *g3)
 {
 
     *g0 = gasGM.getGM102B(); // NO2
