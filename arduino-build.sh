@@ -1,6 +1,9 @@
 #!/bin/bash
 PROJECT=esp32_voc.ino
-BOARD=esp32:esp32:esp32da
+#BOARD=esp32:esp32:esp32da
+#BOARD=esp32:esp32:AirM2M_CORE_ESP32C3
+BOARD=esp32:esp32:esp32s3
+BAUDRATE=115200
 COMMAND=$1
 
 INCLUDE+=" -I ./src/lg/"
@@ -31,7 +34,7 @@ build() {
 	echo "Building $PROJECT"
 	#echo "INCLUDE $INCLUDE"
 	#echo "FLAGS $FLAGS"
-	arduino-cli compile --fqbn  $BOARD  $CONFIG $LIBRARIES --build-property compiler.cpp.extra_flags="$INCLUDE" --build-property build.extra_flags="$FLAGS" --build-path="$BUILDPATH"  $PROJECT &
+	arduino-cli compile --fqbn  $BOARD  $CONFIG $LIBRARIES --build-property compiler.cpp.extra_flags="$INCLUDE" --build-property build.extra_flags="$FLAGS" --build-path="$BUILDPATH"  $PROJECT  &
 	pid=$! # Process Id of the previous running command
 	sec=0
 	while kill -0 $pid 2>/dev/null
@@ -67,7 +70,7 @@ then
 	[ $status -eq 0 ] && flash
 elif [ "$COMMAND" = "--monitor" ];
 then
-	arduino-cli monitor -p /dev/ttyUSB0 --config baudrate=115200
+	arduino-cli monitor -p /dev/ttyUSB0 --config baudrate=$BAUDRATE
 else
 	echo "Nothing to do for target"
 fi

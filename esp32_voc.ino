@@ -20,63 +20,38 @@
  * SOFTWARE.
  */
 
-// replace these accordingly
-#define API_PATH      "http://ingestion.edgeimpulse.com/api/training/data"
-#define API_KEY       "ei_6439c5b0db8ae8e54c767b41ccfe526502d8e36b389a1a6e4d8c950f8aed073d"
-#define HMAC_KEY      "7c8f7f289a331c36a2c3e4a52ab449c0"
 #define SSID_NET      "Audrialand"
 #define PASSWORD      "Adirondax@1234"
 
-#define SAMPLE_TIME   10 // seconds
-#define SAMPLE_RATE   50 // Hz
-
-#define USE_ESP32_VOC  true
-
-#define ESP32
-
 //Blynk related Begin: 
-#define BLYNK_TEMPLATE_ID "TMPL2FssVYEU4"
-#define BLYNK_TEMPLATE_NAME "LED ESP32"
+#define BLYNK_TEMPLATE_ID           "TMPL2nFwFHGwJ"
+#define BLYNK_TEMPLATE_NAME         "Quickstart Template"
+#define BLYNK_AUTH_TOKEN            "yuxh2-g6cNgI0hQrYJndjftoxtllCLwB"
 
 #define BLYNK_FIRMWARE_VERSION        "0.1.0"
 
-#define BLYNK_PRINT Serial
-//#define BLYNK_DEBUG
+#define USE_ESP32_VOC  true
+#define ESP32
 
-//#define APP_DEBUG
-//Blynk related End
 
 #define LED_PIN 2  // Use pin 2 for LED (change it, if your board uses another pin)
 
+// avoid brownout - use with care
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
 
 
+#include <BlynkSimpleEsp32.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "qcbor.h"
-#include "nonposix.h"
-#include "sensor_aq.h"
-#include "sensor_aq_mbedtls_hs256.h"
-#include "lg.h"
-
-#include "BlynkEdgent.h"
 #include "ei_fusion.h"
 
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Wire.h>
 
-// avoid brownout - use with care
-#include "soc/soc.h"
-#include "soc/rtc_cntl_reg.h"
 
-#include <Multichannel_Gas_GMXXX.h>
-
-GAS_GMXXX<TwoWire> gas;
 
 boolean gbCaptureData = false;
-char* gsMACAddress ="";
 
 // V0 is a datastream used to transfer and store LED switch state.
 // Evey time you use the LED switch in the app, this function
@@ -98,195 +73,12 @@ BLYNK_WRITE(V0)
   }
 }
 
-void ei_gas_init(void)
-{   
-    Serial.println("before i2c scan");
-    //if(!i2c_scanner(0x08))
-    //    return false;
-    Serial.println("after i2c scan");
-
-    gas.begin(Wire, 0x08); // use the hardware I2C
-    Serial.println("after begin");
-}
-
-void getData(uint32_t *g0, uint32_t *g1,uint32_t *g2,uint32_t *g3)
-{
-    //gas.getXXX returns uint32_t
-    *g0 = gas.getGM102B(); // NO2
-    *g1 = gas.getGM302B(); // C2H5CH
-    *g2 = gas.getGM502B(); // VOC
-    *g3 = gas.getGM702B(); // CO
-
-}
-
-
-void getGasData(uint16_t *g0,  uint16_t *g1,  uint16_t *g2, uint16_t *g3 ){
-    
-    uint32_t a,b,c,d ;
-   
-    getData(&a,&b,&c,&d);
-
-    *g0=a;
-    *g1=b;
-    *g2=c;
-    *g3=c;
-}
-
-void post_data(){
-    //ei_gas_init();
-    // The sensor format supports signing the data, set up a signing context
-    sensor_aq_signing_ctx_t signing_ctx;
-
-    // We'll use HMAC SHA256 signatures, which can be created through Mbed TLS
-    // If you use a different crypto library you can implement your own context
-    sensor_aq_mbedtls_hs256_ctx_t hs_ctx;
-    // Set up the context, the last argument is the HMAC key
-    sensor_aq_init_mbedtls_hs256_context(&signing_ctx, &hs_ctx, HMAC_KEY);
-
-    // Set up the sensor acquisition basic context
-    sensor_aq_ctx ctx = {
-        // We need a single buffer. The library does not require any dynamic allocation (but your TLS library might)
-        { (unsigned char*)malloc(1024), 1024 },
-
-        // Pass in the signing context
-        &signing_ctx,
-
-        // And pointers to fwrite and fseek - note that these are pluggable so you can work with them on
-        // non-POSIX systems too. Just override the EI_SENSOR_AQ_STREAM macro to your custom file type.
-        &ms_fwrite,
-        &ms_fseek,
-        // if you set the time function this will add 'iat' (issued at) field to the header with the current time
-        // if you don't include it, this will be omitted
-        NULL
-    };
-    // Payload header
-    sensor_aq_payload_info payload = {
-        // Unique device ID (optional), set this to e.g. MAC address or device EUI **if** your device has one
-        gsMACAddress,
-        // Device type (required), use the same device type for similar devices
-        "ESP32-VOC-001",
-        // How often new data is sampled in ms. (100Hz = every 10 ms.)
-        1/SAMPLE_TIME,
-        // The axes which you'll use. The units field needs to comply to SenML units (see https://www.iana.org/assignments/senml/senml.xhtml)
-        { { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" }, { "CO", "ppm" } }
-        //{ { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" } }
-    };
-
-    // Place to write our data.
-    memory_stream_t stream;
-    stream.length = 0;
-    stream.current_position = 0;
-    // Initialize the context, this verifies that all requirements are present
-    // it also writes the initial CBOR structure
-    int res;
-    res = sensor_aq_init(&ctx, &payload, &stream, false);
-    if (res != AQ_OK) {
-        Serial.printf("sensor_aq_init failed (%d)\n", res);
-        while(1);
-    }
-
-    lg( "1.");
-    // Periodically call `sensor_aq_add_data` (every 10 ms. in this example) to append data
-    int16_t values[SAMPLE_TIME * SAMPLE_RATE][4] = { (int16_t)0 }; // 100Hz * 10 seconds
-    uint16_t values_ix = 0;
-    while(values_ix < SAMPLE_TIME * SAMPLE_RATE){
-        uint64_t next_tick = micros() + SAMPLE_RATE * 1000;
-        
-        uint16_t g0, g1, g2, g3;
-
-        getGasData(&g0, &g1, &g2, &g3);
-        values[values_ix][0] = (int16_t)g0;
-        values[values_ix][1] = (int16_t)g1;
-        values[values_ix][2] = (int16_t)g2;
-        values[values_ix][3] = (int16_t)g3;
-
-        values_ix++;
-
-        while (micros() < next_tick) {
-            /* blocking loop */
-        }
-    }
-
-    lg("4.");
-    for (size_t ix = 0; ix < sizeof(values) / sizeof(values[0]); ix++) {
-        res = sensor_aq_add_data_i16(&ctx, values[ix], 4);
-        if (res != AQ_OK) {
-            Serial.printf("sensor_aq_add_data failed (%d)\n", res);
-            while(1);
-        }
-    }
-
-    // When you're done call sensor_aq_finish - this will calculate the finalized signature and close the CBOR file
-    res = sensor_aq_finish(&ctx);
-    if (res != AQ_OK) {
-        Serial.printf("sensor_aq_finish failed (%d)\n", res);
-        while(1);
-    }
-
-    // For convenience we'll print the encoded file. 
-    // You can throw this directly in http://cbor.me to decode
-    Serial.printf("Encoded file:\n");
-
-    // Print the content of the stream here:
-    for (size_t ix = 0; ix < stream.length ; ix++) {
-        Serial.printf("%02x ", stream.buffer[ix]);
-    }
-    Serial.printf("\n");
-
-    /*
-     * 
-     * Here the binary data stored in the stream object is
-     * uploaded to the API
-     * 
-     */
-    lg("5.");
-    HTTPClient http;
-    if(http.begin(API_PATH)){
-      Serial.println("[HTTP] begin...");
-    } else {
-      Serial.println("[HTTP] failed...");
-    }
-    
-    http.addHeader("content-type", "application/cbor");
-    http.addHeader("x-api-key",  API_KEY);
-    http.addHeader("x-file-name", "embeddedtest");
-    http.addHeader("x-label", "test");
-  
-    int httpCode = http.POST(stream.buffer, stream.length);
-    
-    if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-        String payload = http.getString();
-        Serial.println(payload);
-        Serial.println(httpCode);
-     } else {
-        Serial.printf("[HTTP] failed, error: %d %s\n", httpCode, http.errorToString(httpCode).c_str());
-     }
-     http.end();
-     delay(2000);    
-}     
-
-void get_gas(void) {
-    uint8_t len = 0;
-    uint8_t addr = 0;
-    uint8_t i;
-    uint32_t val = 0;
-
-    val = gas.getGM102B(); Serial.print("GM102B: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-    val = gas.getGM302B(); Serial.print("GM302B: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-    val = gas.getGM502B(); Serial.print("GM502B: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-    val = gas.getGM702B(); Serial.print("GM702B: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-
-    delay(2000);    
-}
 
 void setup() {
-    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+    //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
 
     Serial.begin(115200);
+    /*
     WiFi.begin(SSID_NET, PASSWORD);
     
     Serial.println("Connecting to WiFi..");
@@ -297,29 +89,32 @@ void setup() {
     }
     Serial.println("");
     Serial.println("WiFi connected");
-    byte mac[6];
-    WiFi.macAddress(mac);
-    sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
-
-
 
     delay(100);
-    BlynkEdgent.begin();
+    */
+    Blynk.begin(BLYNK_AUTH_TOKEN, SSID_NET, PASSWORD);
+    //BlynkEdgent.begin();
 
-    //ei_gas_init();
-    gas.begin(Wire, 0x08);
+    //byte mac[6];
+    //WiFi.macAddress(mac);
+    //sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
+    
     fusion_setup();
 
 }
 
 void loop(){
-    BlynkEdgent.run();
-    delay(10);
+    Serial.println("in loop...");
+    //BlynkEdgent.run();
+    Blynk.run();
+    delay(1000);
     if (gbCaptureData) {
         Serial.println("in capturing...");
-        post_data();
-        //get_gas();
+        delay(1000);
+        capture_data();
     } else {
+       Serial.println("in infuerencing...");
+       delay(1000);
        fusion_loop();
     }
 

@@ -21,20 +21,57 @@
  */
 
 /* Includes ---------------------------------------------------------------- */
-#include <nut_inferencing.h>
+#include <Arduino.h>
+
 #include "ei_fusion.h"
+#include "ei_sensor_multi_gas.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "qcbor.h"
+#include "nonposix.h"
+#include "sensor_aq.h"
+#include "sensor_aq_mbedtls_hs256.h"
+
+#if EI_INFERENCING == 1
+#include "nut_inferencing.h"
+#endif
+
+#include "lg.h"
+
+#include <WiFi.h>
+#include <WiFiClnt.h>
+#include <HTTPClient.h>
 #include <Wire.h>
+#include "esp_system.h"
 
-#include <Multichannel_Gas_GMXXX.h>
+
+// replace these accordingly
+#define API_PATH      "http://ingestion.edgeimpulse.com/api/training/data"
+#define API_KEY       "ei_6439c5b0db8ae8e54c767b41ccfe526502d8e36b389a1a6e4d8c950f8aed073d"
+#define HMAC_KEY      "7c8f7f289a331c36a2c3e4a52ab449c0"	
+
+#define SAMPLE_TIME   2 // seconds
+#define SAMPLE_RATE   2 // Hz
+
+#define INFEURENCE_TIME   2 // seconds
+#define INFEURENCE_RATE   2 // Hz
 
 
-GAS_GMXXX<TwoWire> gas;
+#define BLYNK_PRINT Serial
+//#define BLYNK_DEBUG
+
+//#define APP_DEBUG
+//Blynk related End
+
 
 /* Private variables ------------------------------------------------------- */
 static const bool debug_nn = false; // Set this to true to see e.g. features generated from the raw signal
-static int16_t data[N_SENSORS];
+static uint16_t data[N_SENSORS];
 static int8_t fusion_sensors[N_SENSORS];
 static int fusion_ix = 0;
+char* gsMACAddress ="";
 
 /** Used sensors value function connected to label name */
 eiSensors sensors[] =
@@ -42,8 +79,20 @@ eiSensors sensors[] =
     "NO2",    &data[0], &poll_IMU, &init_IMU, -1,
     "C2H5CH", &data[1], &poll_IMU, &init_IMU, -1,
     "VOC",    &data[2], &poll_IMU, &init_IMU, -1,
-    "CO",     &data[3], &poll_ADC, &init_ADC, -1,
+    "CO",     &data[3], &poll_IMU, &init_IMU, -1,
 };
+
+
+
+char* getMacAddress() {
+	uint8_t baseMac[6];
+	// Get MAC address for WiFi station
+	esp_read_mac(baseMac, ESP_MAC_WIFI_STA);
+	char* baseMacChr = "" ;
+	sprintf(baseMacChr, "%02X:%02X:%02X:%02X:%02X:%02X", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
+	return baseMacChr;
+}
+
 
 //"NO2 + C2H5CH + VOC + CO"
 
@@ -52,12 +101,16 @@ eiSensors sensors[] =
 */
 void fusion_setup()
 {
+    byte mac[6];
+    WiFi.macAddress(mac);
+    sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
+
+#if EI_INFERENCING == 1        
     /* Connect used sensors */
     if(ei_connect_fusion_list(EI_CLASSIFIER_FUSION_AXES_STRING) == false) {
         ei_printf("ERR: Errors in sensor list detected\r\n");
         return;
     }
-
     /* Init & start sensors */
 
     for(int i = 0; i < fusion_ix; i++) {
@@ -71,6 +124,7 @@ void fusion_setup()
             }
         }
     }
+#endif    
 }
 
 /**
@@ -78,6 +132,7 @@ void fusion_setup()
 */
 void fusion_loop()
 {
+#if EI_INFERENCING == 1    
     ei_printf("\nStarting inferencing in 2 seconds...\r\n");
 
     delay(2000);
@@ -142,7 +197,9 @@ void fusion_loop()
 #if EI_CLASSIFIER_HAS_ANOMALY == 1
     ei_printf("    anomaly score: %.3f\r\n", result.anomaly);
 #endif
+#endif
 }
+
 
 #if !defined(EI_CLASSIFIER_SENSOR) || (EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_FUSION && EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_ACCELEROMETER)
 #error "Invalid model for current sensor"
@@ -157,12 +214,14 @@ void fusion_loop()
  */
 static int8_t ei_find_axis(char *axis_name)
 {
+#if EI_INFERENCING == 1       
     int ix;
     for(ix = 0; ix < N_SENSORS; ix++) {
         if(strstr(axis_name, sensors[ix].name)) {
             return ix;
         }
     }
+#endif    
     return -1;
 }
 
@@ -174,8 +233,11 @@ static int8_t ei_find_axis(char *axis_name)
  */
 static bool ei_connect_fusion_list(const char *input_list)
 {
-    char *buff;
     bool is_fusion = false;
+
+#if EI_INFERENCING == 1   
+    char *buff;
+
 
     /* Copy const string in heap mem */
     char *input_string = (char *)ei_malloc(strlen(input_list) + 1);
@@ -209,7 +271,7 @@ static bool ei_connect_fusion_list(const char *input_list)
     }
 
     ei_free(input_string);
-
+#endif
     return is_fusion;
 }
 
@@ -217,7 +279,6 @@ static bool ei_connect_fusion_list(const char *input_list)
 bool init_IMU(void) {
   static bool init_status = false;
   if (!init_status) {
-    gas.begin(Wire, MULTIGAS_SENSOR_ADDR);
     init_status=true;
     //init_status = lis.isConnection();
 
@@ -226,7 +287,9 @@ bool init_IMU(void) {
     //    return false;
     //}
 
+#if EI_INFERENCING == 1 
     ei_sleep(100);
+#endif
   }
   return init_status;
 }
@@ -242,7 +305,7 @@ bool init_ADC(void) {
 uint8_t poll_IMU(void) {
 
     getGasData(&data[0], &data[1], &data[2],&data[3]);
-
+    //ei_printf("getting gas data %d,%d,%d,%d",data[0],data[1],data[2],data[3]);
     return 0;
 }
 
@@ -251,3 +314,140 @@ uint8_t poll_ADC(void) {
     //data[6] = analogRead(A0);
     return 0;
 }
+
+
+
+void capture_data(){
+    //ei_gas_init();
+    // The sensor format supports signing the data, set up a signing context
+    sensor_aq_signing_ctx_t signing_ctx;
+
+    // We'll use HMAC SHA256 signatures, which can be created through Mbed TLS
+    // If you use a different crypto library you can implement your own context
+    sensor_aq_mbedtls_hs256_ctx_t hs_ctx;
+    // Set up the context, the last argument is the HMAC key
+    sensor_aq_init_mbedtls_hs256_context(&signing_ctx, &hs_ctx, HMAC_KEY);
+
+    // Set up the sensor acquisition basic context
+    sensor_aq_ctx ctx = {
+        // We need a single buffer. The library does not require any dynamic allocation (but your TLS library might)
+        { (unsigned char*)malloc(1024), 1024 },
+
+        // Pass in the signing context
+        &signing_ctx,
+
+        // And pointers to fwrite and fseek - note that these are pluggable so you can work with them on
+        // non-POSIX systems too. Just override the EI_SENSOR_AQ_STREAM macro to your custom file type.
+        &ms_fwrite,
+        &ms_fseek,
+        // if you set the time function this will add 'iat' (issued at) field to the header with the current time
+        // if you don't include it, this will be omitted
+        NULL
+    };
+    // Payload header
+    sensor_aq_payload_info payload = {
+        // Unique device ID (optional), set this to e.g. MAC address or device EUI **if** your device has one
+        gsMACAddress,
+        // Device type (required), use the same device type for similar devices
+        "ESP32-VOC-001",
+        // How often new data is sampled in ms. (100Hz = every 10 ms.)
+        (float) 1000/SAMPLE_RATE,
+        // The axes which you'll use. The units field needs to comply to SenML units (see https://www.iana.org/assignments/senml/senml.xhtml)
+        { { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" }, { "CO", "ppm" } }
+        //{ { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" } }
+    };
+
+    // Place to write our data.
+    memory_stream_t stream;
+    stream.length = 0;
+    stream.current_position = 0;
+    // Initialize the context, this verifies that all requirements are present
+    // it also writes the initial CBOR structure
+    int res;
+    res = sensor_aq_init(&ctx, &payload, &stream, false);
+    if (res != AQ_OK) {
+        Serial.printf("sensor_aq_init failed (%d)\n", res);
+        while(1);
+    }
+
+    lg( "1.");
+    // Periodically call `sensor_aq_add_data` (every 10 ms. in this example) to append data
+    int16_t values[SAMPLE_TIME * SAMPLE_RATE][4] = { (int16_t)0 }; // 100Hz * 10 seconds
+    uint16_t values_ix = 0;
+    while(values_ix < SAMPLE_TIME * SAMPLE_RATE){
+        uint64_t next_tick = micros() + SAMPLE_RATE * 1000;
+        
+        uint16_t g0, g1, g2, g3;
+
+        getGasData(&g0, &g1, &g2, &g3);
+        Serial.printf("getGasData data (%d,%d,%d,%d)\n", g0,g1,g2,g3);
+        values[values_ix][0] = (int16_t)g0;
+        values[values_ix][1] = (int16_t)g1;
+        values[values_ix][2] = (int16_t)g2;
+        values[values_ix][3] = (int16_t)g3;
+
+        values_ix++;
+
+        while (micros() < next_tick) {
+            /* blocking loop */
+        }
+    }
+
+    lg("4.");
+    //for (size_t ix = 0; ix < sizeof(values) / sizeof(values[0]); ix++) {
+    for (size_t ix = 0; ix< SAMPLE_TIME * SAMPLE_RATE ; ix++) {
+        res = sensor_aq_add_data_i16(&ctx, values[ix], 4);
+        if (res != AQ_OK) {
+            Serial.printf("sensor_aq_add_data failed (%d)\n", res);
+            while(1);
+        }
+    }
+
+    // When you're done call sensor_aq_finish - this will calculate the finalized signature and close the CBOR file
+    res = sensor_aq_finish(&ctx);
+    if (res != AQ_OK) {
+        Serial.printf("sensor_aq_finish failed (%d)\n", res);
+        while(1);
+    }
+
+    // For convenience we'll print the encoded file. 
+    // You can throw this directly in http://cbor.me to decode
+    Serial.printf("Encoded file:\n");
+
+    // Print the content of the stream here:
+    for (size_t ix = 0; ix < stream.length ; ix++) {
+        Serial.printf("%02x ", stream.buffer[ix]);
+    }
+    Serial.printf("\n");
+    /*
+     * 
+     * Here the binary data stored in the stream object is
+     * uploaded to the API
+     * 
+     */
+    lg("5.");
+    HTTPClient http;
+    WiFiClnt* wifi = new WiFiClnt();
+    if(http.begin(*wifi,API_PATH)){
+      Serial.println("[HTTP] begin...");
+    } else {
+      Serial.println("[HTTP] failed...");
+    }
+    
+    http.addHeader("content-type", "application/cbor");
+    http.addHeader("x-api-key",  API_KEY);
+    http.addHeader("x-file-name", "mbdtest");
+    http.addHeader("x-label", "Test");
+  
+    int httpCode = http.POST(stream.buffer, stream.length);
+    
+    if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+        String payload = http.getString();
+        Serial.println(payload);
+        Serial.println(httpCode);
+     } else {
+        Serial.printf("[HTTP] failed, error: %d %s\n", httpCode, http.errorToString(httpCode).c_str());
+     }
+     http.end();
+     delay(2000);    
+}//capture_data

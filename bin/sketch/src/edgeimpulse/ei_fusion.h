@@ -25,14 +25,13 @@
 #ifndef _EI_FUSION_H
 #define _EI_FUSION_H
 
-#include <nut_inferencing.h>
-#include "el_sensor_multi_gas.h"
-#include <Wire.h>
+#define EI_CLASSIFIER_SENSOR EI_CLASSIFIER_SENSOR_ACCELEROMETER
+#define EI_INFERENCING  0
 
 /** Struct to link sensor axis name to sensor value function */
 typedef struct{
     const char *name;
-    int16_t *value;
+    uint16_t *value;
     uint8_t (*poll_sensor)(void);
     bool (*init_sensor)(void);
     int8_t status;  // -1 not used 0 used(unitialized) 1 used(initalized) 2 data sampled
@@ -61,5 +60,7 @@ void fusion_setup();
 * @brief      Get data and run inferencing
 */
 void fusion_loop();
+
+void capture_data();
 
 #endif
