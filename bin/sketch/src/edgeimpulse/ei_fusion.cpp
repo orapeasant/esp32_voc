@@ -42,10 +42,10 @@
 #include "lg.h"
 
 #include <WiFi.h>
-#include <WiFiClnt.h>
+#include "WiFiClnt.h"
 #include <HTTPClient.h>
 #include <Wire.h>
-#include "esp_system.h"
+
 
 
 // replace these accordingly
@@ -85,16 +85,6 @@ eiSensors sensors[] =
 
 
 
-char* getMacAddress() {
-	uint8_t baseMac[6];
-	// Get MAC address for WiFi station
-	esp_read_mac(baseMac, ESP_MAC_WIFI_STA);
-	char* baseMacChr = "" ;
-	sprintf(baseMacChr, "%02X:%02X:%02X:%02X:%02X:%02X", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
-	return baseMacChr;
-}
-
-
 //"NO2 + C2H5CH + VOC + CO"
 
 /**
@@ -102,10 +92,6 @@ char* getMacAddress() {
 */
 void fusion_setup()
 {
-    byte mac[6];
-    WiFi.macAddress(mac);
-    sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
-
 #if EI_INFERENCING == 1        
     /* Connect used sensors */
     if(ei_connect_fusion_list(EI_CLASSIFIER_FUSION_AXES_STRING) == false) {
@@ -319,7 +305,12 @@ uint8_t poll_ADC(void) {
 
 
 void capture_data(){
-    //ei_gas_init();
+    //byte mac[6];
+    //WiFi.macAddress(mac);
+    //sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
+    
+    //getMacAddress(gsMACAddress);
+
     // The sensor format supports signing the data, set up a signing context
     sensor_aq_signing_ctx_t signing_ctx;
 
@@ -348,11 +339,11 @@ void capture_data(){
     // Payload header
     sensor_aq_payload_info payload = {
         // Unique device ID (optional), set this to e.g. MAC address or device EUI **if** your device has one
-        gsMACAddress,
+        "gsMACAddress",
         // Device type (required), use the same device type for similar devices
         "ESP32-VOC-001",
         // How often new data is sampled in ms. (100Hz = every 10 ms.)
-        (float) 1000/SAMPLE_RATE,
+        1000/SAMPLE_RATE,
         // The axes which you'll use. The units field needs to comply to SenML units (see https://www.iana.org/assignments/senml/senml.xhtml)
         { { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" }, { "CO", "ppm" } }
         //{ { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" } }
@@ -395,8 +386,8 @@ void capture_data(){
     }
 
     lg("4.");
-    //for (size_t ix = 0; ix < sizeof(values) / sizeof(values[0]); ix++) {
-    for (size_t ix = 0; ix< SAMPLE_TIME * SAMPLE_RATE ; ix++) {
+    for (size_t ix = 0; ix < sizeof(values) / sizeof(values[0]); ix++) {
+    //for (size_t ix = 0; ix< SAMPLE_TIME * SAMPLE_RATE ; ix++) {
         res = sensor_aq_add_data_i16(&ctx, values[ix], 4);
         if (res != AQ_OK) {
             Serial.printf("sensor_aq_add_data failed (%d)\n", res);
@@ -428,11 +419,12 @@ void capture_data(){
      */
     lg("5.");
     HTTPClient http;
-    WiFiClnt* wifi = new WiFiClnt();
-    if(http.begin(*wifi,API_PATH)){
+    //WiFiClnt* wifi = new WiFiClnt();
+    //if(http.begin(*wifi,API_PATH)){
+    if(http.begin(API_PATH)){        
       Serial.println("[HTTP] begin...");
     } else {
-      Serial.println("[HTTP] failed...");
+      Serial.println("[HTTP] begin failed...");
     }
     
     http.addHeader("content-type", "application/cbor");

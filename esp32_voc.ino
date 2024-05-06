@@ -1,28 +1,11 @@
-/* Edge Impulse ingestion SDK
- * Copyright (c) 2020 EdgeImpulse Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 #define SSID_NET      "Audrialand"
 #define PASSWORD      "Adirondax@1234"
 
+#define BOARD_TYPE_ESP32_VOC
+//#define BOARD_TYPE_ESP32_WROOM
+#define USE_ESP32_VOC  true
+
+#define ESP32
 //Blynk related Begin: 
 #define BLYNK_TEMPLATE_ID           "TMPL2nFwFHGwJ"
 #define BLYNK_TEMPLATE_NAME         "Quickstart Template"
@@ -30,9 +13,11 @@
 
 #define BLYNK_FIRMWARE_VERSION        "0.1.0"
 
-#define USE_ESP32_VOC  true
-#define ESP32
+#define BLYNK_PRINT Serial
+//#define BLYNK_DEBUG
 
+//#define APP_DEBUG
+//Blynk related End
 
 #define LED_PIN 2  // Use pin 2 for LED (change it, if your board uses another pin)
 
@@ -99,7 +84,7 @@ void setup() {
     //WiFi.macAddress(mac);
     //sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
     
-    fusion_setup();
+
 
 }
 

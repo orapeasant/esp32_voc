@@ -46,7 +46,7 @@ static const char* valid_senml_units[] = { "m", "kg", "s", "A", "K", "cd", "mol"
                                             "count", "//", "%RH", "%EL", "EL", "1/s",
                                             "S/m", "B", "VA", "var", "J/m" };
 
-#define EI_MAX_SENSOR_AXES                 20
+#define EI_MAX_SENSOR_AXES                20
 
 typedef enum {
     AQ_OK = 0,

@@ -1,7 +1,6 @@
 #!/bin/bash
 PROJECT=esp32_voc.ino
 #BOARD=esp32:esp32:esp32da
-#BOARD=esp32:esp32:AirM2M_CORE_ESP32C3
 BOARD=esp32:esp32:esp32s3
 BAUDRATE=115200
 COMMAND=$1
@@ -16,9 +15,10 @@ INCLUDE+=" -I ./src/edgeimpulse/edge-impulse-sdk/dsp/"
 INCLUDE+=" -I ./src/edgeimpulse/model-parameters/"
 INCLUDE+=" -I ./src/edgeimpulse/tflite-model/"
 
-LIBRARIES+=" --libraries  ./libs"
+#LIBRARIES+=" --libraries  ./libs"
+LIBRARIES+=""
 BUILDPATH="./bin"
-CONFIG="--config-file ./arduino-cli.yaml"
+#CONFIG="--config-file ./arduino-cli.yaml"
 
 FLAGS+=" -O3"
 FLAGS+=" -g3"
@@ -26,7 +26,6 @@ FLAGS+=" -DEI_SENSOR_AQ_STREAM=int"
 FLAGS+=" -DEIDSP_QUANTIZE_FILTERBANK=0"
 FLAGS+=" -D__STATIC_FORCEINLINE=__STATIC_INLINE"
 
-#rm -Rf /tmp/arduino/sketches/*
 
 PORT=$(arduino-cli board list | grep USB | cut -d ' ' -f1)
 

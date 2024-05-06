@@ -215,7 +215,7 @@
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiUdp.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/Udp.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/cbuf.h \
- src/edgeimpulse/WiFiClnt.h \
+ /home/ubuntu/proj/esp32_voc/esp32_voc/bin/sketch/src/edgeimpulse/WiFiClnt.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/HTTPClient/src/HTTPClient.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiClient.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFiClientSecure/src/WiFiClientSecure.h \

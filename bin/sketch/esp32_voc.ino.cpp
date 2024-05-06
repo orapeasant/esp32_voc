@@ -1,30 +1,13 @@
 #include <Arduino.h>
 #line 1 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
-/* Edge Impulse ingestion SDK
- * Copyright (c) 2020 EdgeImpulse Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 #define SSID_NET      "Audrialand"
 #define PASSWORD      "Adirondax@1234"
 
+#define BOARD_TYPE    "ESP32_VOC"
+//#define BOARD_TYPE    "ESP32"
+#define USE_ESP32_VOC  true
+
+#define ESP32
 //Blynk related Begin: 
 #define BLYNK_TEMPLATE_ID           "TMPL2nFwFHGwJ"
 #define BLYNK_TEMPLATE_NAME         "Quickstart Template"
@@ -32,9 +15,11 @@
 
 #define BLYNK_FIRMWARE_VERSION        "0.1.0"
 
-#define USE_ESP32_VOC  true
-#define ESP32
+#define BLYNK_PRINT Serial
+//#define BLYNK_DEBUG
 
+//#define APP_DEBUG
+//Blynk related End
 
 #define LED_PIN 2  // Use pin 2 for LED (change it, if your board uses another pin)
 
@@ -58,13 +43,13 @@ boolean gbCaptureData = false;
 // V0 is a datastream used to transfer and store LED switch state.
 // Evey time you use the LED switch in the app, this function
 // will listen and update the state on device
-#line 59 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
+#line 44 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
 void BlynkWidgetWrite0(BlynkReq __attribute__ ((__unused__)) &request, const BlynkParam __attribute__ ((__unused__)) &param);
-#line 77 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
+#line 62 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
 void setup();
-#line 106 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
+#line 91 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
 void loop();
-#line 59 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
+#line 44 "/home/ubuntu/proj/esp32_voc/esp32_voc/esp32_voc.ino"
 BLYNK_WRITE(V0)
 {
   // Local variable `value` stores the incoming LED switch state (1 or 0)
