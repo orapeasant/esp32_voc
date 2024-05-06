@@ -1,31 +1,17 @@
-/* Edge Impulse Arduino examples
- * Copyright (c) 2022 EdgeImpulse Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 
 /* Includes ---------------------------------------------------------------- */
 #ifndef _EI_FUSION_H
 #define _EI_FUSION_H
 
-#define EI_CLASSIFIER_SENSOR EI_CLASSIFIER_SENSOR_ACCELEROMETER
-#define EI_INFERENCING  0
+#include "ei_const.h"
+
+//#define EI_CLASSIFIER_SENSOR EI_CLASSIFIER_SENSOR_ACCELEROMETER
+//#define EI_INFERENCING  1
+
+
+//#define SAMPLE_TIME   3 // seconds
+//#define SAMPLE_RATE   20 // Hz  1000/20
+
 
 /** Struct to link sensor axis name to sensor value function */
 typedef struct{
@@ -53,13 +39,13 @@ uint8_t poll_ADC(void);
 /**
 * @brief      Arduino setup function
 */
-void fusion_setup();
+void fusion_setup(bool debug = false);
 
 /**
 * @brief      Get data and run inferencing
 */
-void fusion_loop();
+void fusion_loop(bool debug = false);
 
-void capture_data();
+void capture_data(bool debug = false);
 
 #endif

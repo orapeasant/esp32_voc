@@ -1,9 +1,13 @@
+#define API_PATH      "http://ingestion.edgeimpulse.com/api/training/data"
+#define API_KEY       "ei_6439c5b0db8ae8e54c767b41ccfe526502d8e36b389a1a6e4d8c950f8aed073d"
+#define HMAC_KEY      "7c8f7f289a331c36a2c3e4a52ab449c0"
 
-
-/* Includes ---------------------------------------------------------------- */
 #include <Arduino.h>
 
+#include "ei_const.h"
+
 #include "ei_fusion.h"
+
 #include "ei_sensor_multi_gas.h"
 
 #include <stdio.h>
@@ -15,7 +19,7 @@
 #include "sensor_aq_mbedtls_hs256.h"
 
 #if EI_INFERENCING == 1
-//#include "nut_inferencing.h"
+#include "VOC_inferencing.h"
 #endif
 
 #include "lg.h"
@@ -27,31 +31,12 @@
 
 
 
-// replace these accordingly
-#define API_PATH      "http://ingestion.edgeimpulse.com/api/training/data"
-#define API_KEY       "ei_6439c5b0db8ae8e54c767b41ccfe526502d8e36b389a1a6e4d8c950f8aed073d"
-#define HMAC_KEY      "7c8f7f289a331c36a2c3e4a52ab449c0"	
-
-#define SAMPLE_TIME   2 // seconds
-#define SAMPLE_RATE   2 // Hz
-
-#define INFEURENCE_TIME   2 // seconds
-#define INFEURENCE_RATE   2 // Hz
-
-
-#define BLYNK_PRINT Serial
-//#define BLYNK_DEBUG
-
-//#define APP_DEBUG
-//Blynk related End
-
 
 /* Private variables ------------------------------------------------------- */
-static const bool debug_nn = false; // Set this to true to see e.g. features generated from the raw signal
 static uint16_t data[N_SENSORS];
 static int8_t fusion_sensors[N_SENSORS];
 static int fusion_ix = 0;
-char* gsMACAddress ="";
+const char *gsMACAddress ="";
 
 /** Used sensors value function connected to label name */
 eiSensors sensors[] =
@@ -69,11 +54,8 @@ eiSensors sensors[] =
 /**
 * @brief      Arduino setup function
 */
-void fusion_setup()
+void fusion_setup(bool debug)
 {
-
-    vocSetup();
-
 #if EI_INFERENCING == 1        
     /* Connect used sensors */
     if(ei_connect_fusion_list(EI_CLASSIFIER_FUSION_AXES_STRING) == false) {
@@ -99,7 +81,7 @@ void fusion_setup()
 /**
 * @brief      Get data and run inferencing
 */
-void fusion_loop()
+void fusion_loop(bool debug)
 {
 #if EI_INFERENCING == 1    
     ei_printf("\nStarting inferencing in 2 seconds...\r\n");
@@ -150,8 +132,9 @@ void fusion_loop()
 
     // Run the classifier
     ei_impulse_result_t result = { 0 };
-
-    err = run_classifier(&signal, &result, debug_nn);
+    if(debug) ei_printf("INFO: debug is on \n") ;
+    else ei_printf("INFO: Debug is off \n"); 
+    err = run_classifier(&signal, &result, debug);
     if (err != EI_IMPULSE_OK) {
         ei_printf("ERR:(%d)\r\n", err);
         return;
@@ -286,7 +269,8 @@ uint8_t poll_ADC(void) {
 
 
 
-void capture_data(){
+void capture_data(bool debug)
+{
     //byte mac[6];
     //WiFi.macAddress(mac);
     //sscanf(gsMACAddress, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
@@ -319,16 +303,16 @@ void capture_data(){
         NULL
     };
     // Payload header
+    gsMACAddress=WiFi.macAddress().c_str();
     sensor_aq_payload_info payload = {
         // Unique device ID (optional), set this to e.g. MAC address or device EUI **if** your device has one
-        "ac:87:a3:0a:2d:1b",
+        gsMACAddress,
         // Device type (required), use the same device type for similar devices
         "ESP32-VOC-001",
         // How often new data is sampled in ms. (100Hz = every 10 ms.)
         1000/SAMPLE_RATE,
         // The axes which you'll use. The units field needs to comply to SenML units (see https://www.iana.org/assignments/senml/senml.xhtml)
         { { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" }, { "CO", "ppm" } }
-        //{ { "NO2", "ppm" }, { "C2H5CH", "ppm" }, { "VOC", "ppm" } }
     };
 
     // Place to write our data.
@@ -354,7 +338,7 @@ void capture_data(){
         uint16_t g0, g1, g2, g3;
 
         getGasData(&g0, &g1, &g2, &g3);
-        Serial.printf("getGasData data (%d,%d,%d,%d)\n", g0,g1,g2,g3);
+        //Serial.printf("getGasData data (%d,%d,%d,%d)\n", g0,g1,g2,g3);
         values[values_ix][0] = (int16_t)g0;
         values[values_ix][1] = (int16_t)g1;
         values[values_ix][2] = (int16_t)g2;
@@ -367,9 +351,8 @@ void capture_data(){
         }
     }
 
-    lg("4.");
-    for (size_t ix = 0; ix < sizeof(values) / sizeof(values[0]); ix++) {
-    //for (size_t ix = 0; ix< SAMPLE_TIME * SAMPLE_RATE ; ix++) {
+    //for (size_t ix = 0; ix < sizeof(values) / sizeof(values[0]); ix++) {
+    for (size_t ix = 0; ix< SAMPLE_TIME * SAMPLE_RATE ; ix++) {
         res = sensor_aq_add_data_i16(&ctx, values[ix], 4);
         if (res != AQ_OK) {
             Serial.printf("sensor_aq_add_data failed (%d)\n", res);
@@ -389,17 +372,18 @@ void capture_data(){
     Serial.printf("Encoded file:\n");
 
     // Print the content of the stream here:
-    for (size_t ix = 0; ix < stream.length ; ix++) {
-        Serial.printf("%02x ", stream.buffer[ix]);
+    if(debug) {
+        for (size_t ix = 0; ix < stream.length ; ix++) {
+            Serial.printf("%02x ", stream.buffer[ix]);
+        }
+        Serial.printf("\n");
     }
-    Serial.printf("\n");
     /*
      * 
      * Here the binary data stored in the stream object is
      * uploaded to the API
      * 
      */
-    lg("5.");
     HTTPClient http;
     WiFiClnt* wifi = new WiFiClnt();
     if(http.begin(*wifi,API_PATH)){
@@ -423,5 +407,4 @@ void capture_data(){
         Serial.printf("[HTTP] failed, error: %d %s\n", httpCode, http.errorToString(httpCode).c_str());
      }
      http.end();
-     delay(2000);    
 }//capture_data

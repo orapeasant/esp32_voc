@@ -15,8 +15,8 @@ INCLUDE+=" -I ./src/edgeimpulse/edge-impulse-sdk/dsp/"
 INCLUDE+=" -I ./src/edgeimpulse/model-parameters/"
 INCLUDE+=" -I ./src/edgeimpulse/tflite-model/"
 
-#LIBRARIES+=" --libraries  ./libs"
-LIBRARIES+=""
+LIBRARIES+=" --libraries  ./libs"
+#LIBRARIES+=""
 BUILDPATH="./bin"
 #CONFIG="--config-file ./arduino-cli.yaml"
 

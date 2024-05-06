@@ -222,7 +222,8 @@
  /home/ubuntu/Arduino/libraries/blynk-library/src/WidgetTimeInput.h \
  /home/ubuntu/Arduino/libraries/blynk-library/src/Blynk/BlynkDateTime.h \
  /home/ubuntu/Arduino/libraries/blynk-library/src/WidgetMap.h \
- src/edgeimpulse/ei_fusion.h \
+ src/edgeimpulse/ei_fusion.h src/edgeimpulse/ei_const.h \
+ src/edgeimpulse/WiFiClnt.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/HTTPClient/src/HTTPClient.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src/WiFiClient.h \
  /home/ubuntu/.arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFiClientSecure/src/WiFiClientSecure.h \
