@@ -29,7 +29,7 @@
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/inferencing_engines/engines.h"
 
-const char* ei_classifier_inferencing_categories[] = { "Ambient", "Gin", "Skippy" };
+const char* ei_classifier_inferencing_categories[] = { "Ambient", "Gin", "Menthol Cigarette", "Skippy" };
 
 uint8_t ei_dsp_config_4_axes[] = { 0, 1, 2, 3 };
 const uint32_t ei_dsp_config_4_axes_size = 4;
@@ -87,7 +87,7 @@ const ei_learning_block_t ei_learning_blocks[ei_learning_blocks_size] = {
         EI_CLASSIFIER_IMAGE_SCALING_NONE,
         ei_learning_block_5_inputs,
         ei_learning_block_5_inputs_size,
-        3
+        4
     },
 };
 
@@ -108,24 +108,24 @@ const ei_impulse_t impulse_355354_0 = {
     .project_id = 355354,
     .project_owner = "orapeasant",
     .project_name = "VOC",
-    .deploy_version = 4,
+    .deploy_version = 8,
 
     .nn_input_frame_size = 4,
-    .raw_sample_count = 60,
+    .raw_sample_count = 1,
     .raw_samples_per_frame = 4,
     .dsp_input_frame_size = 1 * 4,
     .input_width = 0,
     .input_height = 0,
     .input_frames = 0,
-    .interval_ms = 50,
-    .frequency = 20,
+    .interval_ms = 100,
+    .frequency = 10,
     .dsp_blocks_size = ei_dsp_blocks_size,
     .dsp_blocks = ei_dsp_blocks,
     
     .object_detection_count = 0,
     .fomo_output_size = 0,
     
-    .tflite_output_features_count = 3,
+    .tflite_output_features_count = 4,
     .learning_blocks_size = ei_learning_blocks_size,
     .learning_blocks = ei_learning_blocks,
 
@@ -137,7 +137,7 @@ const ei_impulse_t impulse_355354_0 = {
     .slices_per_model_window = 4,
 
     .has_anomaly = EI_ANOMALY_TYPE_UNKNOWN,
-    .label_count = 3,
+    .label_count = 4,
     .calibration = ei_calibration,
     .categories = ei_classifier_inferencing_categories,
     .object_detection_nms = ei_object_detection_nms

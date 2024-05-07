@@ -61,17 +61,17 @@
 #define EI_CLASSIFIER_PROJECT_ID                 355354
 #define EI_CLASSIFIER_PROJECT_OWNER              "orapeasant"
 #define EI_CLASSIFIER_PROJECT_NAME               "VOC"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     4
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     8
 #define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        4
-#define EI_CLASSIFIER_RAW_SAMPLE_COUNT           10
+#define EI_CLASSIFIER_RAW_SAMPLE_COUNT           1
 #define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      4
-#define EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE       (EI_CLASSIFIER_RAW_SAMPLE_COUNT*EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME)
+#define EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE       (EI_CLASSIFIER_RAW_SAMPLE_COUNT * EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME)
 #define EI_CLASSIFIER_INPUT_WIDTH                0
 #define EI_CLASSIFIER_INPUT_HEIGHT               0
 #define EI_CLASSIFIER_INPUT_FRAMES               0
-#define EI_CLASSIFIER_NN_OUTPUT_COUNT            3
+#define EI_CLASSIFIER_NN_OUTPUT_COUNT            4
 #define EI_CLASSIFIER_INTERVAL_MS                100
-#define EI_CLASSIFIER_LABEL_COUNT                3
+#define EI_CLASSIFIER_LABEL_COUNT                4
 #define EI_CLASSIFIER_HAS_ANOMALY                EI_ANOMALY_TYPE_UNKNOWN
 #define EI_CLASSIFIER_HAS_VISUAL_ANOMALY         0
 #define EI_CLASSIFIER_SINGLE_FEATURE_INPUT       1
@@ -121,7 +121,9 @@
 
 #define EI_STUDIO_VERSION_MAJOR             1
 #define EI_STUDIO_VERSION_MINOR             49
-#define EI_STUDIO_VERSION_PATCH             19
+#define EI_STUDIO_VERSION_PATCH             21
+
+#define EI_CLASSIFIER_HR_ENABLED            0
 
 #if ((EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TFLITE) ||      (EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_DRPAI)) &&      EI_CLASSIFIER_USE_FULL_TFLITE == 1
 
@@ -266,5 +268,12 @@ typedef struct {
     bool scaling_raw;
     bool padding;
 } ei_dsp_config_imu_syntiant_t;
+
+typedef struct {
+    uint32_t block_id;
+    uint16_t implementation_version;
+    int axes;
+    const char * ppg_ecg;
+} ei_dsp_config_hr_t;
 
 #endif // _EI_CLASSIFIER_MODEL_METADATA_H_

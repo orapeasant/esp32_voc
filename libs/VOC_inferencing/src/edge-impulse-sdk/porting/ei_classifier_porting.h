@@ -109,11 +109,11 @@ void ei_free(void *ptr);
 #endif
 
 #ifndef EI_PORTING_ARDUINO
-//#ifdef ARDUINO
+#ifdef ARDUINO
 #define EI_PORTING_ARDUINO      1
-//#else
-//#define EI_PORTING_ARDUINO      0
-//#endif
+#else
+#define EI_PORTING_ARDUINO      0
+#endif
 #endif
 
 #ifndef EI_PORTING_MBED
